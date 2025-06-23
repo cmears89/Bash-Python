@@ -43,3 +43,19 @@ echo "   nmap -p- $TARGET"
 echo
 echo "5) OS detection (no ping):"
 echo "   nmap -O -Pn $TARGET"
+
+# Ask which to run
+read -p "Which scan would you like to run? [1-5] " CHOICE
+
+case $CHOICE in
+  1) CMD="nmap -sn $TARGET" ;;
+  2) CMD="nmap -sC -sV -p $PORTS $TARGET" ;;
+  3) CMD="nmap -A -p $PORTS $TARGET" ;;
+  4) CMD="nmap -p- $TARGET" ;;
+  5) CMD="nmap -O -Pn $TARGET" ;;
+  *) echo "Invalid choice."; exit 1 ;;
+esac
+
+echo
+echo "Running: $CMD"
+eval $CMD
