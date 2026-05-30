@@ -2,25 +2,25 @@
 
 import requests
 
-url = "http://192.168.57.68:8080/bijection"
+base_url = "http://192.168.57.68:8080/bijection"
 
 flag = ""
 
 for i in range(100):
-    r = requests.post(f"{url}?index={i}")
-    char = r.text.strip()
+    url = f"{base_url}?index={i}"
 
-    print(f"{i}: {repr(char)}")
+    r = requests.post(url)
+    text = r.text.strip()
 
-    if len(char) != 1:
-        print("Server did not return a single flag character.")
-        print("Response was:")
-        print(r.text[:500])
+    print(f"{i}: {repr(text)}")
+
+    if len(text) != 1:
+        print("Not getting a single character. Stopping.")
         break
 
-    flag += char
+    flag += text
 
-    if char == "}":
+    if text == "}":
         break
 
-print("\nFlag:", flag)
+print("Flag:", flag)
