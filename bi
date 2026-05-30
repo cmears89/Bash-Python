@@ -1,23 +1,16 @@
 #!/usr/bin/python3
 import requests
-import re
+from bs4 import BeautifulSoup
 
-url="http://192.168.57.68:8080/bijection"
-flag=""
+urls=[
+ "http://192.168.57.68:8080/bijection",
+ "http://192.168.57.68:8080/bijection/",
+ "http://192.168.57.68:8080/bijection/index.php"
+]
 
-for i in range(100):
- r=requests.post(url,data={"index":str(i)})
- chars=re.findall(r"'(.)'",r.text)
-
- print(i, chars)
-
- if len(chars) < 4:
-  print("not enough chars")
-  break
-
- c=chars[-1]
- flag+=c
- print("FLAG:",flag)
-
- if c=="}":
-  break
+for u in urls:
+ print("TESTING",u)
+ r=requests.post(u,data={"index":"3"})
+ text=BeautifulSoup(r.text,"html.parser").get_text("\n",strip=True)
+ print(text[-500:])
+ print()
