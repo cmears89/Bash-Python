@@ -1,20 +1,42 @@
 #!/usr/bin/python3
 
 import requests
+import re
 
-base_url = "http://192.168.57.68:8080/bijection"
+host = "http://192.168.57.68:8080"
 
-flag = ""
+def clean(text):
+    text = text.strip()
 
-for x in range(31):
-    url = f"{base_url}?index={x}"
+    # If it is the normal help page, mark it clearly
+    if "I accept integer data provided to my index parameter" in text:
+        return "[HELP PAGE]"
 
-    response = requests.post(url)
-    character = response.text.strip()
+    # Remove HTML tags if any response includes HTML around the answer
+    text = re.sub(r"<[^>]+>", "", text).strip()
 
-    print(f"index={x} returned: {character}")
+    return text
 
-    flag += character
+tests = [
+    ("query no slash", lambda x: requests.post(f"{host}/bijection?index={x}", allow_redirects=False)),
+    ("query slash", lambda x: requests.post(f"{host}/bijection/?index={x}", allow_redirects=False)),
+    ("form no slash", lambda x: requests.post(f"{host}/bijection", data={"index": x}, allow_redirects=False)),
+    ("form slash", lambda x: requests.post(f"{host}/bijection/", data={"index": x}, allow_redirects=False)),
+    ("params no slash", lambda x: requests.post(f"{host}/bijection", params={"index": x}, allow_redirects=False)),
+    ("params slash", lambda x: requests.post(f"{host}/bijection/", params={"index": x}, allow_redirects=False)),
+]
 
-print("\nFlag:")
-print(flag)
+for name, func in tests:
+    print(f"\n=== Testing {name} ===")
+    output = ""
+
+    for x in range(31):
+        r = func(x)
+        result = clean(r.text)
+
+        print(f"{x}: status={r.status_code} url={r.url} result={repr(result)}")
+
+        if result not in ["[HELP PAGE]", ""]:
+            output += result
+
+    print("Collected:", output)
