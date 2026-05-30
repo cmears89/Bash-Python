@@ -9,8 +9,7 @@ soup=BeautifulSoup(r.text,"html.parser")
 flag=""
 
 for row in soup.find_all("tr")[1:]:
- cells=row.find_all("td")
- if cells:
-  flag+=cells[0].get_text(strip=True)
+ cells=[c.get_text(strip=True) for c in row.find_all("td")]
+ flag+="".join(cells)
 
 print(flag)
