@@ -2,14 +2,13 @@
 
 import requests
 
-url = "http://192.168.57.68:8080/bijection"
+base_url = "http://192.168.57.68:8080/bijection"
 
 flag = ""
 
-for i in range(100):
-    r = requests.post(url, params={"index": i})
-
-    char = r.text.strip()
+for index in range(100):
+    response = requests.post(base_url, params={"index": index})
+    char = response.text.strip()
 
     if not char:
         break
@@ -20,4 +19,4 @@ for i in range(100):
     if char == "}":
         break
 
-print("\nFinal flag:", flag)
+print("Final flag:", flag)
