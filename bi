@@ -1,27 +1,22 @@
 #!/usr/bin/python3
 
 import requests
-from bs4 import BeautifulSoup
 
 url = "http://192.168.57.68:8080/bijection"
 
 flag = ""
 
 for i in range(100):
-    r = requests.post(url, data={"index": i})
+    r = requests.post(f"{url}?index={i}")
+    char = r.text.strip()
 
-    # Print raw response first so you can see what changes
-    print(f"\n--- index {i} ---")
-    print(r.text)
+    print(f"{i}: {repr(char)}")
 
-    text = r.text.strip()
-
-    if len(text) == 1:
-        char = text
-    else:
-        # fallback: grab visible text from HTML
-        soup = BeautifulSoup(r.text, "html.parser")
-        char = soup.get_text(strip=True)[-1]
+    if len(char) != 1:
+        print("Server did not return a single flag character.")
+        print("Response was:")
+        print(r.text[:500])
+        break
 
     flag += char
 
