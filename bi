@@ -1,26 +1,20 @@
-cat > bij_final.py <<'EOF'
+cat > bij_real.py <<'EOF'
 #!/usr/bin/python3
 import requests
 from bs4 import BeautifulSoup
 
 url="http://192.168.57.68:8080/bijection"
-flag=""
+flag="OS{"
 
-for i in range(100):
+for i in range(3,100):
     r=requests.post(url,data={"index":str(i)})
     text=BeautifulSoup(r.text,"html.parser").get_text("\n",strip=True)
 
     lines=[x.strip() for x in text.splitlines() if x.strip()]
-    chars=[x for x in lines if len(x)==1]
+    c=lines[-1]
 
-    if not chars:
-        print("No character found at",i)
-        print(text[-500:])
-        break
-
-    c=chars[-1]
     flag+=c
-    print(i,c,flag)
+    print(i,repr(c),flag)
 
     if c=="}":
         break
@@ -28,4 +22,4 @@ for i in range(100):
 print("FLAG:",flag)
 EOF
 
-python3 bij_final.py
+python3 bij_real.py
