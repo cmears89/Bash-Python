@@ -1,0 +1,29 @@
+#!/usr/bin/python3
+import socket
+import threading
+
+HOST = "0.0.0.0"
+PORT = 8080
+
+def handle_client(conn, addr):
+ print("Connection from", addr)
+ data = b""
+ while True:
+  chunk = conn.recv(4096)
+  if not chunk:
+   break
+  data += chunk
+ print(data.decode(errors="ignore"))
+ conn.close()
+
+s = socket.socket()
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s.bind((HOST, PORT))
+s.listen(4)
+
+print("Listening on", PORT)
+
+while True:
+ conn, addr = s.accept()
+ t = threading.Thread(target=handle_client,args=(conn,addr))
+ t.start()
