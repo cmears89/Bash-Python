@@ -7,15 +7,13 @@ flag=""
 
 for i in range(100):
  r=requests.post(url,data={"index":i})
- text=r.text
+ chars=re.findall(r"character '(.)'",r.text)
 
- m=re.search(r"character '(.+?)'",text)
- if not m:
-  print("no match at",i)
-  print(text[:200])
+ if not chars:
+  print("no char at",i)
   break
 
- c=m.group(1)
+ c=chars[-1]
  flag+=c
  print(flag)
 
