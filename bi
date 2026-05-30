@@ -2,25 +2,22 @@
 import requests
 import re
 
+url="http://192.168.57.68:8080/bijection"
 flag=""
 
 for i in range(100):
- url="http://192.168.57.68:8080/bijection?index="+str(i)
- r=requests.post(url)
+ r=requests.post(url,data={"index":str(i)})
+ chars=re.findall(r"'(.)'",r.text)
 
- pattern=r"/bijection\?index="+str(i)+r" will return the character '(.)'"
- m=re.search(pattern,r.text)
+ print(i, chars)
 
- if not m:
-  print("no match for",i)
-  print(r.text[:500])
+ if len(chars) < 4:
+  print("not enough chars")
   break
 
- c=m.group(1)
+ c=chars[-1]
  flag+=c
- print(i,c,flag)
+ print("FLAG:",flag)
 
  if c=="}":
   break
-
-print("FLAG:",flag)
