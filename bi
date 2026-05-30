@@ -2,25 +2,17 @@
 
 import requests
 
-base_url = "http://192.168.57.68:8080/bijection"
+urls = [
+    "http://192.168.57.68:8080/bijection?index=0",
+    "http://192.168.57.68:8080/bijection/?index=0",
+]
 
-flag = ""
+for url in urls:
+    print(f"\nTesting: {url}")
 
-for i in range(100):
-    url = f"{base_url}?index={i}"
+    r = requests.post(url, allow_redirects=False)
 
-    r = requests.post(url)
-    text = r.text.strip()
-
-    print(f"{i}: {repr(text)}")
-
-    if len(text) != 1:
-        print("Not getting a single character. Stopping.")
-        break
-
-    flag += text
-
-    if text == "}":
-        break
-
-print("Flag:", flag)
+    print("Status:", r.status_code)
+    print("Location:", r.headers.get("Location"))
+    print("Final URL:", r.url)
+    print("Body preview:", repr(r.text[:200]))
