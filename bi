@@ -1,26 +1,23 @@
-cat > bijection.py <<'EOF'
 #!/usr/bin/python3
+
 import requests
-from bs4 import BeautifulSoup
 
-url="http://192.168.57.68:8080/bijection"
-flag="OS{"
+url = "http://192.168.57.68:8080/bijection"
 
-for i in range(3,100):
-    r=requests.post(url,data={"index":str(i)})
-    text=BeautifulSoup(r.text,"html.parser").get_text("\n",strip=True)
-    lines=[x.strip() for x in text.splitlines() if x.strip()]
+flag = ""
 
-    c=lines[-1]
+for i in range(100):
+    r = requests.post(url, params={"index": i})
 
-    print(i,repr(c))
+    char = r.text.strip()
 
-    flag+=c
-
-    if c=="}":
+    if not char:
         break
 
-print("FLAG:",flag)
-EOF
+    flag += char
+    print(flag)
 
-python3 bijection.py
+    if char == "}":
+        break
+
+print("\nFinal flag:", flag)
