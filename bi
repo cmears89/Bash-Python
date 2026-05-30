@@ -1,24 +1,31 @@
 #!/usr/bin/python3
 
 import requests
+import time
 
 url = "http://192.168.57.68:8080/bijection/"
 
 flag = ""
+index = 0
 
-for i in range(100):
-    r = requests.post(url, data={"index": str(i)})
-    text = r.text.strip()
+while True:
+    response = requests.post(url, data={"index": index})
+    text = response.text.strip()
 
-    print(f"{i}: {repr(text)}")
+    print(f"index {index}: {repr(text)}")
 
-    if len(text) != 1:
-        print("Not getting a single character.")
-        break
+    # Only accept responses that are a single character
+    if len(text) == 1:
+        flag += text
+        print("Current flag:", flag)
 
-    flag += text
+        if text == "}":
+            break
+    else:
+        print("Did not get a single character. Retrying...")
+        time.sleep(1)
+        continue
 
-    if text == "}":
-        break
+    index += 1
 
-print("\nFlag:", flag)
+print("\nFinal flag:", flag)
