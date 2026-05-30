@@ -2,31 +2,19 @@
 
 import requests
 
-host = "http://192.168.57.68:8080"
+base_url = "http://192.168.57.68:8080/bijection"
 
 flag = ""
 
-for i in range(31):
-    # First request: use the lab's exact URL format
-    first_url = f"{host}/bijection?index={i}"
-    r = requests.post(first_url, allow_redirects=False)
+for x in range(31):
+    url = f"{base_url}?index={x}"
 
-    # If server redirects to /bijection/?index=i, POST there manually
-    if r.status_code in [301, 302, 303, 307, 308]:
-        redirect_url = r.headers["Location"]
+    response = requests.post(url)
+    character = response.text.strip()
 
-        # Location might be relative or absolute
-        if redirect_url.startswith("/"):
-            redirect_url = host + redirect_url
+    print(f"index={x} returned: {character}")
 
-        r = requests.post(redirect_url, allow_redirects=False)
+    flag += character
 
-    text = r.text.strip()
-
-    print(f"\n===== index {i} =====")
-    print(repr(text[:200]))
-
-    flag += text
-
-print("\nFlag attempt:")
+print("\nFlag:")
 print(flag)
