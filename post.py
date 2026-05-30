@@ -1,21 +1,20 @@
 #!/usr/bin/python3
 import requests
-import re
+from bs4 import BeautifulSoup
 
 url="http://192.168.57.68:8080/bijection"
 flag=""
 
 for i in range(100):
  r=requests.post(url,data={"index":i})
- chars=re.findall(r"character '(.)'",r.text)
+ text=BeautifulSoup(r.text,"html.parser").get_text("\n",strip=True)
+ lines=text.splitlines()
 
- if not chars:
-  print("no char at",i)
-  break
+ c=lines[-1].strip()
 
- c=chars[-1]
+ print(i,repr(c))
+
  flag+=c
- print(flag)
 
  if c=="}":
   break
