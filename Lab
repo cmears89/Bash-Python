@@ -1,0 +1,21 @@
+#!/usr/bin/python3
+import socket
+
+h="192.168.57.68";p=2002
+
+for n in range(50):
+ s=socket.socket();s.connect((h,p))
+ d=b""
+ while 1:
+  c=s.recv(4096)
+  if not c:break
+  d+=c
+ s.close()
+
+ j=d.find(b"\xff\xd8\xff")
+ if j<0:
+  print(n,"no jpg")
+  continue
+
+ open("flag"+str(n)+".jpg","wb").write(d[j:])
+ print("saved","flag"+str(n)+".jpg")
