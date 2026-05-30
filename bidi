@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+
+import requests
+
+base = "http://192.168.57.68:8080"
+
+tests = [
+    ("POST query no slash",      lambda i: requests.post(f"{base}/bijection?index={i}")),
+    ("POST query slash",         lambda i: requests.post(f"{base}/bijection/?index={i}")),
+    ("POST body form",           lambda i: requests.post(f"{base}/bijection", data={"index": str(i)})),
+    ("POST body form slash",     lambda i: requests.post(f"{base}/bijection/", data={"index": str(i)})),
+    ("POST body raw",            lambda i: requests.post(f"{base}/bijection", data=str(i))),
+    ("POST body raw index",      lambda i: requests.post(f"{base}/bijection", data=f"index={i}")),
+    ("POST json",                lambda i: requests.post(f"{base}/bijection", json={"index": i})),
+]
+
+for name, func in tests:
+    print(f"\n=== {name} ===")
+    for i in range(3):
+        r = func(i)
+        text = r.text.strip()
+        print(f"{i}: status={r.status_code}, length={len(text)}, response={repr(text[:80])}")
