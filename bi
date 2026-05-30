@@ -1,11 +1,15 @@
 import requests
+from bs4 import BeautifulSoup
 
-base = "http://192.168.57.68:8080/bijection/"
+url = "http://192.168.57.68:8080/bijection/"
 flag = ""
 
-for i in range(100):
-    r = requests.post(base, params={"index": i}, allow_redirects=False)
-    text = r.text.strip()
+for i in range(200):
+    r = requests.post(url, params={"index": i})
+    body = r.text.strip()
+
+    soup = BeautifulSoup(body, "html.parser")
+    text = soup.get_text(strip=True)
 
     print(i, repr(text))
 
@@ -13,8 +17,7 @@ for i in range(100):
         flag += text
         if text == "}":
             break
-    else:
-        print("Unexpected response at index", i)
+    elif flag:
         break
 
 print("FLAG:", flag)
