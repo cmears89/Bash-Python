@@ -1,22 +1,25 @@
 #!/usr/bin/python3
 import requests
-from bs4 import BeautifulSoup
+import re
 
-base="http://192.168.57.68:8080/bijection"
+url="http://192.168.57.68:8080/bijection"
 flag=""
 
 for i in range(100):
- r=requests.post(base+"?index="+str(i))
- text=BeautifulSoup(r.text,"html.parser").get_text("",strip=True)
+ r=requests.post(url,data={"index":i})
+ text=r.text
 
- print(i, repr(text))
-
- if text == "" or "error" in text.lower():
+ m=re.search(r"character '(.+?)'",text)
+ if not m:
+  print("no match at",i)
+  print(text[:200])
   break
 
- flag += text
+ c=m.group(1)
+ flag+=c
+ print(flag)
 
- if text == "}":
+ if c=="}":
   break
 
 print("FLAG:",flag)
