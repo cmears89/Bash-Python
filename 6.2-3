@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 import requests
+from bs4 import BeautifulSoup
 
-# Check if there are other about pages
-for path in ['/about', '/about/', '/staff', '/employees', '/team', 
-             '/about-2', '/about.php', '/staff.html']:
-    r = requests.get(f'http://192.168.56.68:8080{path}')
-    if r.status_code == 200:
-        print(f"FOUND: {path} -> {len(r.text)} bytes")
-    else:
-        print(f"{path} -> {r.status_code}")
+r = requests.get('http://192.168.56.68:8080/about.html')
+soup = BeautifulSoup(r.text, 'html.parser')
+
+rows = soup.find_all('tr')
+for row in rows:
+    if 'Damian' in row.text or 'Valiant' in row.text:
+        print(row)
+        print("---")
