@@ -1,0 +1,17 @@
+target = "192.168.56.68"
+port = 9876
+
+# Prime connection
+send(IP(dst=target)/TCP(dport=port, sport=22))
+
+# 1. IP packet with TTL 99
+send(IP(dst=target, ttl=99))
+
+# 2. ICMP packet with data
+send(IP(dst=target)/ICMP()/"Hello, Offsec!")
+
+# 3. UDP packet to port 9876
+send(IP(dst=target)/UDP(dport=port))
+
+# 4. TCP ACK packet to port 9876 from source port 22
+send(IP(dst=target)/TCP(sport=22, dport=port, flags="A", seq=1, ack=1))
