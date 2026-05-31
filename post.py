@@ -1,22 +1,22 @@
 #!/usr/bin/python3
 import requests
-from bs4 import BeautifulSoup
 
-url="http://192.168.57.68:8080/bijection"
-flag=""
+flag = ''
+index = 0
 
-for i in range(100):
- r=requests.post(url,data={"index":i})
- text=BeautifulSoup(r.text,"html.parser").get_text("\n",strip=True)
- lines=text.splitlines()
+while True:
+    r = requests.post(f'http://192.168.56.68:8080/bijection/?index={index}')
+    char = r.text.strip()
+    
+    if len(char) != 1:
+        print(f"Bad response: {char[:50]}")
+        break
+    
+    flag += char
+    print(f"[{index}] {char} -> {flag}")
+    
+    if char == '}':
+        break
+    index += 1
 
- c=lines[-1].strip()
-
- print(i,repr(c))
-
- flag+=c
-
- if c=="}":
-  break
-
-print("FLAG:",flag)
+print(f"\nFull flag: {flag}")
