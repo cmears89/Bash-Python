@@ -1,0 +1,14 @@
+#!/usr/bin/python3
+import requests
+
+# Test 1: POST with data in body
+r1 = requests.post('http://192.168.56.68:8080/bijection', data={'index': 0})
+print("POST body:", repr(r1.text[:100]))
+
+# Test 2: GET request
+r2 = requests.get('http://192.168.56.68:8080/bijection?index=0')
+print("GET params:", repr(r2.text[:100]))
+
+# Test 3: POST with index in URL
+r3 = requests.post('http://192.168.56.68:8080/bijection?index=0')
+print("POST + URL param:", repr(r3.text[:100]))
