@@ -5,12 +5,9 @@ flag = ''
 index = 0
 
 while True:
-    r = requests.post(f'http://192.168.56.68:8080/bijection/?index={index}')
-    char = r.text.strip()
-    
-    if len(char) != 1:
-        print(f"Bad response: {char[:50]}")
-        break
+    r = requests.post('http://192.168.56.68:8080/bijection/', data={'index': index})
+    # Character is right after <div class="container">\n
+    char = r.text.split('<div class="container">')[1].strip()[0]
     
     flag += char
     print(f"[{index}] {char} -> {flag}")
