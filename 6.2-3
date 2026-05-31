@@ -5,18 +5,9 @@ from bs4 import BeautifulSoup
 r = requests.get('http://192.168.56.68:8080/about.html')
 soup = BeautifulSoup(r.text, 'html.parser')
 
-rows = soup.find_all('tr')[1:]  # skip header row
+rows = soup.find_all('tr')[1:]
 
 for row in rows:
     cells = row.find_all('td')
-    if len(cells) >= 3:
-        first = cells[0].text.strip()
-        email = cells[2].text.strip()
-        
-        r2 = requests.post('http://192.168.56.68:8080/login-3/index.php',
-                          data={'username': email, 'password': 'test'})
-        size = len(r2.text)
-        if size != 1102:
-            print(f"*** FOUND *** {first} | {email} -> {size} bytes")
-        else:
-            print(f"{first} | {email} -> {size} bytes")
+    if len(cells) >= 1:
+        print([c.text.strip() for c in cells])
