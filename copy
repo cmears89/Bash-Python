@@ -1,0 +1,37 @@
+sudo kill -9 $(pgrep apt apt-get dpkg unattended-upgrade 2>/dev/null) 2>/dev/null
+
+sudo apt update
+sudo apt install -y lighttpd
+
+sudo tee /etc/lighttpd/lighttpd.conf >/dev/null <<'EOF'
+server.modules = (
+    "mod_indexfile",
+    "mod_access",
+    "mod_alias",
+    "mod_redirect",
+    "mod_accesslog",
+)
+
+server.document-root = "/var/www/html"
+server.upload-dirs = ("/var/cache/lighttpd/uploads")
+server.errorlog = "/var/log/lighttpd/error.log"
+server.pid-file = "/run/lighttpd.pid"
+server.username = "www-data"
+server.groupname = "www-data"
+server.port = 80
+
+accesslog.filename = "/var/log/lighttpd/access.log"
+
+index-file.names = ( "index.php", "index.html" )
+url.access-deny = ( "~", ".inc" )
+static-file.exclude-extensions = ( ".php", ".pl", ".fcgi" )
+EOF
+
+sudo mkdir -p /var/www/html /var/cache/lighttpd/uploads /var/log/lighttpd
+echo "Lighttpd working" | sudo tee /var/www/html/index.html >/dev/null
+
+sudo systemctl restart lighttpd
+curl http://127.0.0.1
+
+echo "Now open http://192.168.57.65 in Kali browser, then run:"
+echo "cd /home/offsec && ls -la && cat * 2>/dev/null"
