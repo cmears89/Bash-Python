@@ -1,0 +1,11 @@
+echo '2104d32130dd99227199321a2cfa8ee277d296e6' > sha1.hash
+john --wordlist=/usr/share/wordlists/rockyou.txt --format=Raw-SHA1 sha1.hash
+john --show --format=Raw-SHA1 sha1.hash
+
+echo 'user:$2y$10$oHnLh4lejEKMTqo7vARr7O56/O1DgT3kscywsmF5zKtkSxlgAJ2v2' > bcrypt.hash
+john --wordlist=/usr/share/wordlists/rockyou.txt bcrypt.hash
+john --show bcrypt.hash
+
+echo 'admin:$apr1$6ltm98zs$goKTtVsQwmLsj6kDH1981/' > apr1.hash
+john --wordlist=/usr/share/wordlists/rockyou.txt apr1.hash
+john --show apr1.hash
