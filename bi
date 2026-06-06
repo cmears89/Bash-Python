@@ -1,7 +1,3 @@
-scp apprentice@192.168.56.50:/tmp/passwd .
-scp apprentice@192.168.56.50:/tmp/shadow .
+searchsploit -u
 
-unshadow passwd shadow > hashes.txt
-
-john --wordlist=/usr/share/wordlists/rockyou.txt hashes.txt
-john --show hashes.txt
+awk -F, '$4 ~ /^2020-05-/ && $6 == "webapps" {count++} END {print count}' /usr/share/exploitdb/files_exploits.csv
