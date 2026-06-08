@@ -1,6 +1,5 @@
-Get-ADGroup "Remote Desktop Users" -Properties Description | Select-Object Name,Description
+Get-GPO -Name "Service" | Select-Object DisplayName,Id
 
-Get-ADGroupMember "Remote Desktop Users" | Select-Object Name,SamAccountName,ObjectClass
+Get-GPOReport -Name "Service" -ReportType Html -Path C:\Users\offsec\Desktop\Service.html
 
-Get-ADGroupMember "ServerAdmins" | Select-Object Name,SamAccountName,ObjectClass
-Get-ADGroupMember "ServerAdmins" -Recursive | Select-Object Name,SamAccountName,ObjectClass
+Get-GPOReport -Name "Default Domain Policy" -ReportType Html -Path C:\Users\offsec\Desktop\DefaultDomainPolicy.html
