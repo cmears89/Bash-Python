@@ -1,3 +1,6 @@
-searchsploit -u
+Get-ADGroup "Remote Desktop Users" -Properties Description | Select-Object Name,Description
 
-awk -F, '$4 ~ /^2020-05-/ && $6 == "webapps" {count++} END {print count}' /usr/share/exploitdb/files_exploits.csv
+Get-ADGroupMember "Remote Desktop Users" | Select-Object Name,SamAccountName,ObjectClass
+
+Get-ADGroupMember "ServerAdmins" | Select-Object Name,SamAccountName,ObjectClass
+Get-ADGroupMember "ServerAdmins" -Recursive | Select-Object Name,SamAccountName,ObjectClass
