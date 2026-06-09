@@ -1,5 +1,8 @@
-Get-GPO -Name "Service" | Select-Object DisplayName,Id
+certutil -urlcache -split -f http://172.16.68.153/cow.jpg C:\Users\offsec\Downloads\cow.jpg
 
-Get-GPOReport -Name "Service" -ReportType Html -Path C:\Users\offsec\Desktop\Service.html
+bitsadmin /create MyDownload
+bitsadmin /addfile MyDownload http://172.16.68.153/dragon.gif C:\Users\offsec\Downloads\dragon.gif
+bitsadmin /resume MyDownload
+bitsadmin /complete MyDownload
 
-Get-GPOReport -Name "Default Domain Policy" -ReportType Html -Path C:\Users\offsec\Desktop\DefaultDomainPolicy.html
+certutil -urlcache -split -f http://172.16.68.153/sheep.jpg C:\Users\offsec\Downloads\sheep.jpg
